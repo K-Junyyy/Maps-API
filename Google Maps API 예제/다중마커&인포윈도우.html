@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Google Maps</title>
+
+    <style type="text/css">
+        /* Set the size of the div element that contains the map */
+        #map {
+            height: 400px;
+            /* The height is 400 pixels */
+            width: 100%;
+            /* The width is the width of the web page */
+        }
+    </style>
+    <script>
+        function initMap() {
+
+            // 지도 스타일
+            const map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 14,
+                center: { lat: 37.5407622, lng: 127.0706095 },
+            });
+
+            // 마커 정보
+            var locations = [
+                { place: "건대입구역", lat: 37.539922, lng: 127.070609 },
+                { place: "어린이대공원역", lat: 37.547263, lng: 127.074181 },
+            ];
+
+            //인포윈도우
+            var infowindow = new google.maps.InfoWindow();
+
+            //마커 생성
+            for (var i = 0; i < locations.length; i++) {
+                var marker = new google.maps.Marker({
+                    map: map,
+                    //label: locations[i].place,
+                    position: new google.maps.LatLng(locations[i].lat, locations[i].lng),
+                });
+
+
+                google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                    return function() {
+                        //html로 표시될 인포 윈도우의 내용
+                        infowindow.setContent(locations[i].place);
+                        //인포윈도우가 표시될 위치
+                        infowindow.open(map, marker);
+                    }
+                })(marker, i));
+                
+                if (marker) {
+                    marker.addListener('click', function() {
+                        //중심 위치를 클릭된 마커의 위치로 변경
+                        map.setCenter(this.getPosition());
+                        //마커 클릭 시의 줌 변화
+                        map.setZoom(17);
+                    });
+                }
+            }
+        }
+
+    </script>
+</head>
+
+<body>
+    <h3>구글 맵</h3>
+    <!--The div element for the map -->
+    <div id="map"></div>
+
+    <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
+    <script
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAIUneOoPw1ZcRMxD9MSYkLgNlgkItaPbA&callback=initMap&libraries=&v=weekly"
+        async></script>
+</body>
+
+</html>
